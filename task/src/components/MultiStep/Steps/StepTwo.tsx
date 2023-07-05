@@ -39,7 +39,7 @@ const StepTwo: React.FC<UpdateFuncProps> = ({ handleChange }) => {
   };
   const handleBack = () => {
     handleChange("one", null);
-    setError2(true);
+    setError2(false);
   };
 
   return (

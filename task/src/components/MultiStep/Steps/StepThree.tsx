@@ -20,7 +20,7 @@ const StepThree: React.FC<UpdateFuncProps> = ({ handleChange }) => {
   };
   const handleBack = () => {
     handleChange("two", null);
-    setError3(true);
+    setError3(false);
   };
 
   return (

@@ -48,6 +48,9 @@ export const MultiStep = () => {
   });
   const handleChange = (stp: string, new_data: object) => {
     if (new_data === null) {
+      if (stp === "submit") {
+        return "OK";
+      }
       const new_steps = steps;
       new_steps[currStep].active = false;
       setSteps(new_steps);
@@ -63,13 +66,9 @@ export const MultiStep = () => {
       ...data,
       ...new_data,
     });
-    console.log({
-      ...data,
-      ...new_data,
-    });
   };
   return (
-    <div className=" p-8 rounded-lg">
+    <div className="p-8 rounded-lg">
       <div className="hero-content flex-col">
         <ul className="steps mb-14">
           {Object.keys(steps).map((key) => {

@@ -4,14 +4,14 @@ interface UpdateFuncProps {
   handleChange: (stp: string, new_data: object) => void;
 }
 const StepFive: React.FC<UpdateFuncProps> = ({ handleChange }) => {
+  const [success, setSuccess] = useState("NA");
   const handleBack = () => {
     handleChange("four", null);
+    setSuccess("NA");
   };
   const handleNext = () => {
-    setSuccess(true);
-    // handleChange("submit", null);
+    setSuccess(handleChange("submit", null) === "OK" ? "OK" : "ERR");
   };
-  const [success, setSuccess] = useState(false);
   return (
     <>
       <div className="text-center lg:text-left lg:ml-12">
@@ -24,7 +24,7 @@ const StepFive: React.FC<UpdateFuncProps> = ({ handleChange }) => {
       </div>
       <div className="card flex-shrink-0 w-full max-w-lg shadow-2xl bg-base-100 mt-[-2em]">
         <div className="card-body">
-          {success ? (
+          {success === "OK" ? (
             <div className="alert alert-success">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -41,9 +41,26 @@ const StepFive: React.FC<UpdateFuncProps> = ({ handleChange }) => {
               </svg>
               <span>Your Form Has Been Submitted !!!</span>
             </div>
+          ) : success === "ERR" ? (
+            <div className="alert alert-error">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="stroke-current shrink-0 h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span>Error! (T^T) Please enter valid information </span>
+            </div>
           ) : (
-            <div class="max-w-md">
-              <p class="mb-5 text-3xl font-bold">
+            <div className="max-w-md">
+              <p className="mb-5 text-3xl font-bold">
                 Would you like to submit your information?
               </p>
             </div>
@@ -59,6 +76,7 @@ const StepFive: React.FC<UpdateFuncProps> = ({ handleChange }) => {
               <button
                 className="btn btn-primary m-2 w-1/2"
                 onClick={handleNext}
+                disabled={success != "NA"}
               >
                 Submit?
               </button>

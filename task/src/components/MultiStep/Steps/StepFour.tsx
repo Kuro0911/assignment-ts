@@ -31,7 +31,7 @@ const StepFour: React.FC<UpdateFuncProps> = ({ handleChange }) => {
   };
   const handleBack = () => {
     handleChange("three", null);
-    setError4(true);
+    setError4(false);
   };
 
   return (
