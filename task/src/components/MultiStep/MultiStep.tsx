@@ -1,11 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import StepOne from "./Steps/StepOne";
 import StepTwo from "./Steps/StepTwo";
 import StepThree from "./Steps/StepThree";
 import StepFour from "./Steps/StepFour";
 import StepFive from "./Steps/StepFive";
+import { useNavigate } from "react-router-dom";
 
 export const MultiStep = () => {
+  const navigate = useNavigate();
+  const authToken: AuthToken = useSelector(
+    (state: AuthState) => state.authToken
+  );
+
+  // useEffect(() => {
+  //   if (authToken.value === "invalid") {
+  //     navigate("/login");
+  //   }
+  // }, [authToken, navigate]);
+
   const [currStep, setCurrStep] = useState("one");
   const [steps, setSteps] = useState({
     one: {
@@ -49,6 +62,8 @@ export const MultiStep = () => {
   const handleChange = (stp: string, new_data: object) => {
     if (new_data === null) {
       if (stp === "submit") {
+        console.log(authToken.value);
+        const auth = authToken.value;
         return "OK";
       }
       const new_steps = steps;

@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 import { api_login } from "../../data/api";
 import { useNavigate } from "react-router-dom";
+
+import { Dispatch } from "redux";
+import { addAuth } from "../../store/actionCreators";
+import { useDispatch } from "react-redux";
+
 export const Login = () => {
+  const dispatch: Dispatch<any> = useDispatch();
   const navigate = useNavigate();
   const [data, setData] = useState({
     email: "",
@@ -15,11 +21,17 @@ export const Login = () => {
   const handleChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     setData({ ...data, password: e.target.value });
   };
+  const saveAuth = React.useCallback(
+    (authToken: AuthToken) => dispatch(addAuth(authToken)),
+    [dispatch]
+  );
   const handleLogin = () => {
     api_login(data)
       .then((res) => {
-        console.log(res.data);
-        navigate("/multi-step");
+        saveAuth({ value: res.data });
+        setTimeout(() => {
+          navigate("/multi-step");
+        }, 500);
       })
       .catch((err) => {
         setError(true);

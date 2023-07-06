@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 
 interface UpdateFuncProps {
   handleChange: (stp: string, new_data: object) => void;
@@ -9,6 +11,7 @@ const StepOne: React.FC<UpdateFuncProps> = ({ handleChange }) => {
     name: "",
     phone_number: "",
   });
+  const [phone, setPhone] = useState(0);
   const [error1, setError1] = useState(false);
   const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     setData1({ ...data1, email: e.target.value });
@@ -83,13 +86,21 @@ const StepOne: React.FC<UpdateFuncProps> = ({ handleChange }) => {
             <label className="label">
               <span className="label-text">Phone Number</span>
             </label>
-            <input
+            <PhoneInput
+              international
+              defaultCountry="IN"
+              countrySelectProps={{ unicodeFlags: true }}
+              value={phone}
+              onChange={setPhone}
+              className="input input-bordered"
+            />
+            {/* <input
               type="text"
               placeholder="Phone Number"
               className="input input-bordered"
               onChange={handleChangePhoneNumber}
               value={data1.phone_number}
-            />
+            /> */}
           </div>
           <div className="form-control mt-6">
             <button className="btn btn-primary" onClick={handleNext}>

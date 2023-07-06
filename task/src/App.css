@@ -40,3 +40,9 @@
 .read-the-docs {
   color: #888;
 }
+.PhoneInputInput{
+  background-color: transparent;
+}
+.PhoneInputInput:focus {
+  outline: none;
+}
