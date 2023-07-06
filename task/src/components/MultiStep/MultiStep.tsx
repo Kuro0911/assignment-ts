@@ -14,11 +14,11 @@ export const MultiStep = () => {
     (state: AuthState) => state.authToken
   );
 
-  // useEffect(() => {
-  //   if (authToken.value === "invalid") {
-  //     navigate("/login");
-  //   }
-  // }, [authToken, navigate]);
+  useEffect(() => {
+    if (authToken === "invalid") {
+      navigate("/login");
+    }
+  }, [authToken, navigate]);
 
   const [currStep, setCurrStep] = useState("one");
   const [steps, setSteps] = useState({
@@ -63,7 +63,7 @@ export const MultiStep = () => {
   const handleChange = async (stp: string, new_data: object) => {
     if (new_data === null) {
       if (stp === "submit") {
-        const auth = authToken.value;
+        const auth = authToken;
         return api_put_form(data, auth)
           .then((res) => {
             console.log("Response:", res.data);

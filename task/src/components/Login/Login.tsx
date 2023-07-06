@@ -28,10 +28,8 @@ export const Login = () => {
   const handleLogin = () => {
     api_login(data)
       .then((res) => {
-        saveAuth({ value: res.data });
-        setTimeout(() => {
-          navigate("/multi-step");
-        }, 500);
+        saveAuth({ value: res.data.authToken });
+        navigate("/multi-step");
       })
       .catch((err) => {
         setError(true);
