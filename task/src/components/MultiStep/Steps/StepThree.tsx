@@ -1,22 +1,34 @@
 import React, { useState } from "react";
+import { stepThreeSchema } from "../validationSchemas/stepThreeSchema";
 
 interface UpdateFuncProps {
   handleChange: (stp: string, new_data: object) => void;
 }
 const StepThree: React.FC<UpdateFuncProps> = ({ handleChange }) => {
   const [data3, setData3] = useState({
-    single_file: "",
+    single_file: null,
   });
   const [error3, setError3] = useState(false);
+  const [errors, setErrors] = useState([]);
 
   const handleChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setError3(false);
+    setErrors([]);
     const selectedFile = e.target.files[0];
     setData3({ ...data3, single_file: selectedFile });
   };
 
   const handleNext = () => {
-    handleChange("four", data3);
-    setError3(true);
+    const validationResult = stepThreeSchema.safeParse(data3);
+    if (validationResult.success) {
+      handleChange("four", data3);
+    } else {
+      const validationErrors = validationResult.error.errors.map(
+        (error) => error.message
+      );
+      setErrors(validationErrors);
+      setError3(true);
+    }
   };
   const handleBack = () => {
     handleChange("two", null);
@@ -46,7 +58,16 @@ const StepThree: React.FC<UpdateFuncProps> = ({ handleChange }) => {
                 d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <span>Error! (T^T) Please enter valid File </span>
+            <span>
+              Error! (T^T) Please enter valid File You have the following errors
+              <div className="flex flex-col mt-2">
+                {errors.map((e, idx) => (
+                  <span className="italic" key={idx}>
+                    &#x2022; {e}
+                  </span>
+                ))}
+              </div>{" "}
+            </span>
           </div>
         ) : (
           <></>
@@ -76,6 +97,7 @@ const StepThree: React.FC<UpdateFuncProps> = ({ handleChange }) => {
               <button
                 className="btn btn-primary m-2 w-1/2"
                 onClick={handleNext}
+                disabled={error3}
               >
                 Next
               </button>

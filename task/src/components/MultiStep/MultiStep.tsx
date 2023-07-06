@@ -54,15 +54,16 @@ export const MultiStep = () => {
     pincode: 0,
     country: "",
     geolocation: "",
-    single_file: "",
-    multi_ups1: "",
-    multi_ups2: "",
-    multi_ups3: "",
+    single_file: null,
+    multi_ups1: null,
+    multi_ups2: null,
+    multi_ups3: null,
   });
   const handleChange = (stp: string, new_data: object) => {
     if (new_data === null) {
       if (stp === "submit") {
         console.log(authToken.value);
+        console.log(data);
         const auth = authToken.value;
         return "OK";
       }
@@ -76,7 +77,6 @@ export const MultiStep = () => {
     const new_steps = steps;
     new_steps[stp].active = true;
     setSteps(new_steps);
-    console.log(steps);
     setData({
       ...data,
       ...new_data,

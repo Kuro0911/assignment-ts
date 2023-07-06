@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { stepTwoSchema } from "../validationSchemas/stepTwoSchema";
 
 interface UpdateFuncProps {
   handleChange: (stp: string, new_data: object) => void;
@@ -13,29 +14,50 @@ const StepTwo: React.FC<UpdateFuncProps> = ({ handleChange }) => {
     country: "",
   });
   const [error2, setError2] = useState(false);
+  const [errors, setErrors] = useState([]);
 
   const handleChangeAddressL1 = (e: React.ChangeEvent<HTMLInputElement>) => {
     setData2({ ...data2, address_1: e.target.value });
   };
   const handleChangeAddressL2 = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError2(false);
+    setErrors([]);
     setData2({ ...data2, address_2: e.target.value });
   };
   const handleChangeCity = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setError2(false);
+    setErrors([]);
     setData2({ ...data2, city: e.target.value });
   };
   const handleChangeState = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setError2(false);
+    setErrors([]);
     setData2({ ...data2, state: e.target.value });
   };
   const handleChangePincode = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setData2({ ...data2, pincode: e.target.value });
+    setError2(false);
+    setErrors([]);
+    const value = !Number.isNaN(e.target.valueAsNumber)
+      ? e.target.valueAsNumber
+      : null;
+    setData2({ ...data2, pincode: value });
   };
   const handleChangeCountry = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setError2(false);
+    setErrors([]);
     setData2({ ...data2, country: e.target.value });
   };
   const handleNext = () => {
-    handleChange("three", data2);
-    setError2(true);
+    const validationResult = stepTwoSchema.safeParse(data2);
+    if (validationResult.success) {
+      handleChange("three", data2);
+    } else {
+      const validationErrors = validationResult.error.errors.map(
+        (error) => error.message
+      );
+      setErrors(validationErrors);
+      setError2(true);
+    }
   };
   const handleBack = () => {
     handleChange("one", null);
@@ -66,7 +88,17 @@ const StepTwo: React.FC<UpdateFuncProps> = ({ handleChange }) => {
                 d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <span>Error! (T^T) Please enter valid details </span>
+            <span>
+              Error! (T^T) Please enter valid details. You have the following
+              errors
+              <div className="flex flex-col mt-2">
+                {errors.map((e, idx) => (
+                  <span className="italic" key={idx}>
+                    &#x2022; {e}
+                  </span>
+                ))}
+              </div>
+            </span>
           </div>
         ) : (
           <></>
@@ -161,6 +193,7 @@ const StepTwo: React.FC<UpdateFuncProps> = ({ handleChange }) => {
               <button
                 className="btn btn-primary m-2 w-1/2"
                 onClick={handleNext}
+                disabled={error2}
               >
                 Next
               </button>

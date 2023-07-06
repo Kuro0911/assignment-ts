@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
+import { stepOneSchema } from "../validationSchemas/stepOneSchema";
 
 interface UpdateFuncProps {
   handleChange: (stp: string, new_data: object) => void;
@@ -11,21 +12,33 @@ const StepOne: React.FC<UpdateFuncProps> = ({ handleChange }) => {
     name: "",
     phone_number: "",
   });
-  const [phone, setPhone] = useState(0);
+  const [phone, setPhone] = useState("");
   const [error1, setError1] = useState(false);
+  const [errors, setErrors] = useState([]);
   const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setError1(false);
+    setErrors([]);
     setData1({ ...data1, email: e.target.value });
   };
   const handleChangeUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError1(false);
+    setErrors([]);
     setData1({ ...data1, name: e.target.value });
   };
-  const handleChangePhoneNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setData1({ ...data1, phone_number: e.target.value });
-  };
   const handleNext = () => {
-    handleChange("two", data1);
-    setError1(true);
+    const validationResult = stepOneSchema.safeParse({
+      ...data1,
+      phone_number: phone,
+    });
+    if (validationResult.success) {
+      handleChange("two", { ...data1, phone_number: phone });
+    } else {
+      const validationErrors = validationResult.error.errors.map(
+        (error) => error.message
+      );
+      setErrors(validationErrors);
+      setError1(true);
+    }
   };
   return (
     <>
@@ -50,7 +63,17 @@ const StepOne: React.FC<UpdateFuncProps> = ({ handleChange }) => {
                 d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <span>Error! (T^T) Please enter valid details </span>
+            <span>
+              Error! (T^T) Please enter valid details. You have the following
+              errors
+              <div className="flex flex-col mt-2">
+                {errors.map((e, idx) => (
+                  <span className="italic" key={idx}>
+                    &#x2022; {e}
+                  </span>
+                ))}
+              </div>
+            </span>
           </div>
         ) : (
           <></>
@@ -94,16 +117,13 @@ const StepOne: React.FC<UpdateFuncProps> = ({ handleChange }) => {
               onChange={setPhone}
               className="input input-bordered"
             />
-            {/* <input
-              type="text"
-              placeholder="Phone Number"
-              className="input input-bordered"
-              onChange={handleChangePhoneNumber}
-              value={data1.phone_number}
-            /> */}
           </div>
           <div className="form-control mt-6">
-            <button className="btn btn-primary" onClick={handleNext}>
+            <button
+              className="btn btn-primary"
+              onClick={handleNext}
+              disabled={error1}
+            >
               Next
             </button>
           </div>
