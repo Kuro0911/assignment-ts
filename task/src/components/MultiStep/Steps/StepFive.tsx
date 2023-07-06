@@ -9,8 +9,8 @@ const StepFive: React.FC<UpdateFuncProps> = ({ handleChange }) => {
     handleChange("four", null);
     setSuccess("NA");
   };
-  const handleNext = () => {
-    setSuccess(handleChange("submit", null) === "OK" ? "OK" : "ERR");
+  const handleNext = async () => {
+    setSuccess((await handleChange("submit", null)) === "OK" ? "OK" : "ERR");
   };
   return (
     <>

@@ -82,7 +82,7 @@ const StepThree: React.FC<UpdateFuncProps> = ({ handleChange }) => {
             <input
               type="file"
               className="file-input file-input-bordered w-full"
-              accept=".png,.pdf"
+              accept=".png"
               onChange={handleChangeFile}
             />
           </div>

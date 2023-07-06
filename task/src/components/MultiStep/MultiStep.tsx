@@ -6,6 +6,7 @@ import StepThree from "./Steps/StepThree";
 import StepFour from "./Steps/StepFour";
 import StepFive from "./Steps/StepFive";
 import { useNavigate } from "react-router-dom";
+import { api_put_form } from "../../data/api";
 
 export const MultiStep = () => {
   const navigate = useNavigate();
@@ -53,19 +54,25 @@ export const MultiStep = () => {
     state: "",
     pincode: 0,
     country: "",
-    geolocation: "",
+    geolocation: "string",
     single_file: null,
     multi_ups1: null,
     multi_ups2: null,
     multi_ups3: null,
   });
-  const handleChange = (stp: string, new_data: object) => {
+  const handleChange = async (stp: string, new_data: object) => {
     if (new_data === null) {
       if (stp === "submit") {
-        console.log(authToken.value);
-        console.log(data);
         const auth = authToken.value;
-        return "OK";
+        return api_put_form(data, auth)
+          .then((res) => {
+            console.log("Response:", res.data);
+            return "OK";
+          })
+          .catch((err) => {
+            console.log(err);
+            return "ERR";
+          });
       }
       const new_steps = steps;
       new_steps[currStep].active = false;
